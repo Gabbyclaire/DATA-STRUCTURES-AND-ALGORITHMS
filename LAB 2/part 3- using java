@@ -1,0 +1,125 @@
+public class Main {
+
+    // ====== Course Class ======
+    static class Course {
+        private String courseCode;
+        private String courseName;
+
+        public Course(String code, String name) {
+            this.courseCode = code;
+            this.courseName = name;
+        }
+
+        public String toString() {
+            return courseCode + " - " + courseName;
+        }
+    }
+
+    // ====== Grade Class ======
+    static class Grade {
+        private int mark;
+        private char theGrade;
+
+        public Grade(int mark) {
+            this.mark = mark;
+            calculateGrade();
+        }
+
+        private void calculateGrade() {
+            if (mark > 69) theGrade = 'A';
+            else if (mark > 59) theGrade = 'B';
+            else if (mark > 49) theGrade = 'C';
+            else if (mark > 39) theGrade = 'D';
+            else theGrade = 'E';
+        }
+
+        public String toString() {
+            return mark + " (" + theGrade + ")";
+        }
+    }
+
+    // ====== Student Class ======
+    static class Student {
+        private String regNo;
+        private String name;
+        private int age;
+        private Course course;
+        private Grade grade;
+
+        public Student(String regNo, String name, int age, Course course, Grade grade) {
+            this.regNo = regNo;
+            this.name = name;
+            this.age = age;
+            this.course = course;
+            this.grade = grade;
+        }
+
+        public void setMarks(int mark) {
+            this.grade = new Grade(mark);
+        }
+
+        public String toString() {
+            return regNo + " | " + name + " | Age: " + age + " | " + course + " | Grade: " + grade;
+        }
+    }
+
+    // ====== Node Class ======
+    static class Node {
+        public Student data;
+        public Node next;
+
+        public Node(Student data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    // ====== StudentLinkedList Class ======
+    static class StudentLinkedList {
+        private Node head;
+
+        public StudentLinkedList() {
+            head = null;
+        }
+
+        public void add(Student student) {
+            Node newNode = new Node(student);
+            if (head == null) {
+                head = newNode;
+            } else {
+                Node current = head;
+                while (current.next != null)
+                    current = current.next;
+                current.next = newNode;
+            }
+        }
+
+        public void display() {
+            System.out.println("\n--- Student Linked List ---");
+            Node current = head;
+            while (current != null) {
+                System.out.println(current.data);
+                current = current.next;
+            }
+        }
+    }
+
+    // ====== Main Method ======
+    public static void main(String[] args) {
+        StudentLinkedList studentList = new StudentLinkedList();
+        Course course = new Course("ICS 2105", "Data Structures");
+
+        for (int i = 1; i <= 15; i++) {
+            String regNo = "REG" + String.format("%03d", i);
+            String name = "Student" + i;
+            int age = 19 + i;
+            int mark = 70+ i;
+            Grade grade = new Grade(mark);
+            Student student = new Student(regNo, name, age, course, grade);
+
+            studentList.add(student);
+        }
+
+        studentList.display();
+    }
+}
