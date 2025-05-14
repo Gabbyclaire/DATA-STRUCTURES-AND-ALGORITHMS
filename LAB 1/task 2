@@ -1,0 +1,76 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+struct Course {
+    char course_code[20];
+    char course_name[50];
+};
+
+struct Grade {
+    int mark;
+    char the_grade;
+};
+
+struct Student {
+    char reg_number[20];
+    char name[50];
+    int age;
+    Course course;
+    Grade grade;
+    bool grade_finalized = false;
+};
+
+Student students[40];
+int student_count = 0;
+
+char calculate_grade(int mark) {
+    if (mark > 69) return 'A';
+    else if (mark > 59) return 'B';
+    else if (mark > 49) return 'C';
+    else if (mark > 39) return 'D';
+    else return 'E';
+}
+
+void add_student() {
+    if(student_count >= 40) {
+        cout << "Limit reached.\n";
+        return;
+    }
+    Student& s = students[student_count];
+    cout << "Enter Reg Number: "; cin >> s.reg_number;
+    cout << "Enter Name: "; cin.ignore(); cin.getline(s.name, 50);
+    cout << "Enter Age: "; cin >> s.age;
+    cout << "Enter Course Code: "; cin >> s.course.course_code;
+    cout << "Enter Course Name: "; cin.ignore(); cin.getline(s.course.course_name, 50);
+    student_count++;
+}
+
+void edit_student(char reg[]) {
+    for(int i = 0; i < student_count; i++) {
+        if(strcmp(students[i].reg_number, reg) == 0) {
+            cout << "Editing " << students[i].name << endl;
+            cout << "Enter new Name: "; cin.ignore(); cin.getline(students[i].name, 50);
+            cout << "Enter new Age: "; cin >> students[i].age;
+            return;
+        }
+    }
+    cout << "Student not found.\n";
+}
+
+void assign_marks(char reg[], int mark) {
+    for(int i = 0; i < student_count; i++) {
+        if(strcmp(students[i].reg_number, reg) == 0) {
+            if(students[i].grade_finalized) {
+                cout << "Grade already assigned and cannot be changed.\n";
+                return;
+            }
+            students[i].grade.mark = mark;
+            students[i].grade.the_grade = calculate_grade(mark);
+            students[i].grade_finalized = true;
+            cout << "Grade assigned: " << students[i].grade.the_grade << endl;
+            return;
+        }
+    }
+    cout << "Student not found.\n";
+}
