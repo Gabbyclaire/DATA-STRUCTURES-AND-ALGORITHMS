@@ -1,0 +1,61 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Course {
+public:
+    string code, name;
+};
+
+class Grade {
+private:
+    int mark;
+    char the_grade;
+    bool finalized = false;
+
+public:
+    void assign_mark(int m) {
+        if (finalized) {
+            cout << "Grade already assigned.\n";
+            return;
+        }
+        mark = m;
+        if (mark > 69) the_grade = 'A';
+        else if (mark > 59) the_grade = 'B';
+        else if (mark > 49) the_grade = 'C';
+        else if (mark > 39) the_grade = 'D';
+        else the_grade = 'E';
+        finalized = true;
+    }
+
+    void display() {
+        if (finalized)
+            cout << "Mark: " << mark << ", Grade: " << the_grade << endl;
+        else
+            cout << "Grade not assigned yet.\n";
+    }
+};
+
+class Student {
+public:
+    string reg_no, name;
+    int age;
+    Course course;
+    Grade grade;
+
+    void input() {
+        cout << "Enter Reg No: "; cin >> reg_no;
+        cout << "Enter Name: "; cin.ignore(); getline(cin, name);
+        cout << "Enter Age: "; cin >> age;
+        cout << "Enter Course Code: "; cin >> course.code;
+        cout << "Enter Course Name: "; getline(cin, course.name);
+    }
+
+    void assign_grade(int mark) {
+        grade.assign_mark(mark);
+    }
+
+    void show_grade() {
+        grade.display();
+    }
+};
