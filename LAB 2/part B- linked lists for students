@@ -1,0 +1,99 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_NAME 50
+#define MAX_CODE 20
+
+typedef struct {
+    char course_code[MAX_CODE];
+    char course_name[MAX_NAME];
+} Course;
+
+typedef struct {
+    int mark;
+    char the_grade;
+} Grade;
+
+typedef struct {
+    char reg_no[MAX_CODE];
+    char name[MAX_NAME];
+    int age;
+    Course course;
+    Grade grade;
+} Student;
+
+typedef struct Node {
+    Student student;
+    struct Node* next;
+} Node;
+
+Node* head = NULL;
+
+char calculate_grade(int mark) {
+    if (mark > 69) return 'A';
+    else if (mark > 59) return 'B';
+    else if (mark > 49) return 'C';
+    else if (mark > 39) return 'D';
+    else return 'E';
+}
+
+Node* create_node(Student s) {
+    Node* n = (Node*)malloc(sizeof(Node));
+    n->student = s;
+    n->next = NULL;
+    return n;
+}
+
+void add_student(Node** head, Student s) {
+    Node* n = create_node(s);
+    if (*head == NULL) {
+        *head = n;
+    } else {
+        Node* temp = *head;
+        while (temp->next != NULL)
+            temp = temp->next;
+        temp->next = n;
+    }
+}
+
+void print_students(Node* head) {
+    printf("\n-- LINKED STUDENT LIST --\n");
+    Node* current = head;
+    while (current != NULL) {
+        Student s = current->student;
+        printf("%s | %s | %d | %s | %s | %d (%c)\n", s.reg_no, s.name, s.age,
+            s.course.course_code, s.course.course_name,
+            s.grade.mark, s.grade.the_grade);
+        current = current->next;
+    }
+}
+
+void destroy_list(Node** head) {
+    Node* current = *head;
+    while (current != NULL) {
+        Node* temp = current;
+        current = current->next;
+        free(temp);
+    }
+    *head = NULL;
+}
+
+int main() {
+    Course course = {"CSC2200", "Data Structures"};
+
+    for (int i = 1; i <= 15; i++) {
+        Student s;
+        sprintf(s.reg_no, "REG%03d", i);
+        sprintf(s.name, "Student%d", i);
+        s.age = 18 + i;
+        s.course = course;
+        s.grade.mark = 40 + i;
+        s.grade.the_grade = calculate_grade(s.grade.mark);
+
+        add_student(&head, s);
+    }
+
+    print_students(head);
+    destroy_list(&head);
+    return 0;
+}
