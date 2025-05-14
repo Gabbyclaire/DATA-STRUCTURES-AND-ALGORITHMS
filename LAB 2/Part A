@@ -1,0 +1,77 @@
+#include <stdio.h>
+
+#define MAX_NAME 50
+#define MAX_CODE 20
+#define MAX_STUDENTS 100
+
+typedef struct {
+    char course_code[MAX_CODE];
+    char course_name[MAX_NAME];
+} Course;
+
+typedef struct {
+    int mark;
+    char the_grade;
+} Grade;
+
+typedef struct {
+    char reg_no[MAX_CODE];
+    char name[MAX_NAME];
+    int age;
+    Course course;
+    Grade grade;
+} Student;
+
+typedef struct {
+    Student students[MAX_STUDENTS];
+    int size;
+} StudentArrayList;
+
+char calculate_grade(int mark) {
+    if (mark > 69) return 'A';
+    else if (mark > 59) return 'B';
+    else if (mark > 49) return 'C';
+    else if (mark > 39) return 'D';
+    else return 'E';
+}
+
+void init_list(StudentArrayList* list) {
+    list->size = 0;
+}
+
+void add_student(StudentArrayList* list, Student s) {
+    if (list->size < MAX_STUDENTS) {
+        list->students[list->size++] = s;
+    }
+}
+
+void print_students(StudentArrayList* list) {
+    printf("\n-- ARRAY STUDENT LIST --\n");
+    for (int i = 0; i < list->size; i++) {
+        Student s = list->students[i];
+        printf("%s | %s | %d | %s | %s | %d (%c)\n", s.reg_no, s.name, s.age,
+            s.course.course_code, s.course.course_name,
+            s.grade.mark, s.grade.the_grade);
+    }
+}
+
+int main() {
+    StudentArrayList list;
+    init_list(&list);
+    Course course = {"CSC2200", "Data Structures"};
+
+    for (int i = 1; i <= 15; i++) {
+        Student s;
+        sprintf(s.reg_no, "REG%03d", i);
+        sprintf(s.name, "Student%d", i);
+        s.age = 18 + i;
+        s.course = course;
+        s.grade.mark = 40 + i;
+        s.grade.the_grade = calculate_grade(s.grade.mark);
+
+        add_student(&list, s);
+    }
+
+    print_students(&list);
+    return 0;
+}
